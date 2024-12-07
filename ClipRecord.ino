@@ -3,26 +3,30 @@
 
 TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
 
-#define TFT_GREY 0x5AEB // New colour
-#define TFT_main 0x5AEB // New colour
-
 void setup(void) {
   tft.init();
-  tft.setRotation(1);
+  tft.setRotation(1); //0 = 세로 1 = 가로 T/F
+
+  
+  // tft.drawRightString("Colour",75,64,4); // Right justified string drawing to x position 75
+  // tft.setCursor(0, 0, 5);
+
+  // tft.setTextColor(TFT_WHITE);
+  
+  // tft.setTextSize(1.2);
+  // tft.println("bootup...");
+
 }
 
 void loop() {
+  tft.fillScreen(TFT_BLACK);
+  // tft.drawString("aa2 is loading", 75, 64, 4);
+  tft.drawString("aa2 is work!", 75, 64, 4);
+  delay(500);
+  // tft.println("welcome!");
   // Fill screen with grey so we can see the effect of printing with and without 
   // a background colour defined
-  tft.fillScreen(TFT_BLACK);
-  // Set "cursor" at top left corner of display (0,0) and select font 2
-  // (cursor will move to next line automatically during printing with 'tft.println'
-  //  or stay on the line is there is room for the text with tft.print)
-  tft.setCursor(0, 0, 2);
-  // Set the font colour to be white with a black background, set text size multiplier to 1
-  tft.setTextColor(TFT_WHITE,TFT_BLACK);  tft.setTextSize(2);
-  // We can now plot text on screen using the "print" class
-  tft.println("Hello World!");
+
   
   // // Set the font colour to be yellow with no background, set to font 7
   // tft.setTextColor(TFT_YELLOW); tft.setTextFont(2);
@@ -44,7 +48,7 @@ void loop() {
   // tft.print("Float = "); tft.println(fnumber);           // Print floating point number
   // tft.print("Binary = "); tft.println((int)fnumber, BIN); // Print as integer value in binary
   // tft.print("Hexadecimal = "); tft.println((int)fnumber, HEX); // Print as integer number in Hexadecimal
-  while(1) yield(); // We must yield() to stop a watchdog timeout.
+  // while(1) yield(); // We must yield() to stop a watchdog timeout.
 }
 
 
