@@ -2,18 +2,26 @@
 #include <SPI.h>
 #include <WiFi.h>
 #include <Arduino.h>
+#include <HTTPClient.h>
 
 const char* ssid = "snowman6ip";       // WiFi 네트워크의 SSID
 const char* password = "snowman6+@"; 
 
+HTTPClient http;
 TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
-#define TFT_BLACK 0x0000 // Black color
-int displayed = 0;
+#define TFT_BLACK 0x0000 // Black color/
+
 int wait = 0;
+int displayed = 0;
+
+
+const char* STATION_ADDRESS = "http://aa2.uk";
+
 // 함수 프로토타입 선언 (기본 인자 설정)
 void cl(String text, int pos = 0);
 
 void setup(void) {
+  Serial.begin(115200);
   tft.init();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
@@ -42,6 +50,28 @@ void setup(void) {
 void loop() {
   String ssid_signal = "Signal: " + String(WiFi.RSSI());
   cl(ssid_signal, 50);
+
+
+  if (WiFi.status() == WL_CONNECTED) {
+    cl("try to request", 50);
+    http.begin(STATION_ADDRESS); // 원하는 URL로 변경
+    cl(STATION_ADDRESS, 50);
+    int httpResponseCode = http.GET();
+    if (httpResponseCode > 0) {
+      String payload = http.getString();
+      cl(String(httpResponseCode), 60);
+      cl(payload, 70);
+      // Serial.println(httpResponseCode); // 응답 코드 출력
+      // Serial.println(payload); // 응답 내용 출력
+    } else {
+      cl(String(httpResponseCode), 60);
+    }
+    // 연결 종료
+    // http.end();
+  } else {
+    cl("device is offline", 50);
+  }
+  delay(1000);
   // cl("A");
   // 메인 루프는 비워둡니다.
 }
@@ -59,6 +89,6 @@ void cl(String text, int pos) {
   } else {
     tft.setCursor(0, pos, 1); //pos 미 지정시 원하는 위치에 출력
   }
-  String linerText = String(displayed) + ": " + text;
+  String linerText = String(displayed) + ": " + text; //출력되는 줄 넘버 + 텍스트
   tft.print(linerText);
 }
